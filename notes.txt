@@ -1,0 +1,31 @@
+/* // função síncrona:
+function returnFile(filePath){
+    const encoding = 'utf-8';
+    fs.readFile(filePath, encoding, (error, text) => {
+        if(error){
+            treatError(error);
+        }
+        console.log(chalk.green(text));
+    });
+}
+ */
+
+/* // função assíncrona com then()
+function returnFile(filePath){
+    const encoding = 'utf-8';
+    fs.promises.readFile(filePath, encoding)
+               .then((text) => console.log(chalk.green(text)))
+               .catch(treatError);
+} */
+
+/* // função assíncrona com async/await
+async function returnFile(path) {
+    try{
+        const encoding = 'utf-8';
+        const text = await fs.promises.readFile(path, encoding);
+        return extraxtLinks(text);
+    
+    }catch(error){
+        treatError(error);    
+    }
+}*/
