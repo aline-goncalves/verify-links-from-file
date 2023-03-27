@@ -1,22 +1,28 @@
 import fs from 'fs'; //lib nativa do node - file system
 
-async function returnLinksFromFileOrDirectoryInPath(path){
+async function returnLinksFromPath(path){
     const links = [];
 
     if(fs.lstatSync(path).isFile()){
-        links.push(await returnFile(path));
+        links.push(await returnLinksFromFile(path));
     
     }else if(fs.lstatSync(path).isDirectory()){
-        const files = await fs.promises.readdir(path);
-        
-        for await(let file of files){
-            links.push(await returnFile(`${path}/${file}`));
-        }
+        links.push(await returnLinksFromDirectory(path));        
     }
     return links;
 }
 
-async function returnFile(path) {
+async function returnLinksFromDirectory(path){
+    const links = [];
+    const files = await fs.promises.readdir(path);
+        
+    for await(let file of files){
+        links.push(await returnLinksFromFile(`${path}/${file}`));
+    }
+    return links;
+}
+
+async function returnLinksFromFile(path) {
     try{
         const encoding = 'utf-8';
         const text = await fs.promises.readFile(path, encoding);
@@ -40,4 +46,4 @@ function treatError(error){
     throw new Error(chalk.red(error.code, "This file doesn't exist or it's a directory!"));
 }
 
-export default returnLinksFromFileOrDirectoryInPath;
+export default returnLinksFromPath;
