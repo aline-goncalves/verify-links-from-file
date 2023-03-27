@@ -1,11 +1,12 @@
 import chalk from 'chalk';
-import returnFile from './index.js';
+import returnLinksFromFileOrDirectoryInPath from './index.js';
 
-const filePath = process.argv;
+const path = process.argv;
 
-async function textProcess(filePath){
-    const result = await returnFile(filePath[2]);
-    console.log(chalk.cyan('lista de links: '), chalk.magenta( JSON.stringify(result)));
+async function textProcess(argumentPath){
+    const pathForVerification = argumentPath[2];
+    const result = await returnLinksFromFileOrDirectoryInPath(pathForVerification);
+    console.log(chalk.cyan('lista de links: '), chalk.magenta(JSON.stringify(result)));
 }
 
-textProcess(filePath);
+textProcess(path);

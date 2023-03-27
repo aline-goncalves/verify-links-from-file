@@ -9,15 +9,15 @@
     },
     "repository": {
       "type": "git",
-      "url": ""
+      "url": "https://github.com/aline-goncalves/verify-links-from-file"
     },
     "keywords": [],
-    "author": "",
+    "author": "aline-goncalves - based on Alura's course: JavaScript for backend",
     "license": "ISC",
     "bugs": {
-      "url": ""
+      "url": "https://github.com/aline-goncalves/verify-links-from-file"
     },
-    "homepage": "",
+    "homepage": "https://github.com/aline-goncalves/verify-links-from-file/blob/main/README.md",
     "dependencies": {
       "chalk": "5.0.1"
     }

@@ -1,24 +1,31 @@
-import fs from 'fs'; //lib nativa do node
-import chalk from 'chalk';
+import fs from 'fs'; //lib nativa do node - file system
 
-function treatError(error){
-    throw new Error(chalk.red(error.code, "This file doesn't exist or it's a directory!"));
+async function returnLinksFromFileOrDirectoryInPath(path){
+    const links = [];
+
+    if(fs.lstatSync(path).isFile()){
+        links.push(await returnFile(path));
+    
+    }else if(fs.lstatSync(path).isDirectory()){
+        const files = await fs.promises.readdir(path);
+        
+        for await(let file of files){
+            links.push(await returnFile(`${path}/${file}`));
+        }
+    }
+    return links;
 }
 
-// função assíncrona com async/await
-async function returnFile(filePath) {
+async function returnFile(path) {
     try{
         const encoding = 'utf-8';
-        const text = await fs.promises.readFile(filePath, encoding)
-        
+        const text = await fs.promises.readFile(path, encoding);
         return extraxtLinks(text);
     
     }catch(error){
         treatError(error);    
     }
 }
-
-export default returnFile;
 
 function extraxtLinks(text){
     const regex = /\[([^[\]]*?)\]\((https?:\/\/[^\s?#.].[^\s]*)\)/gm;
@@ -29,23 +36,8 @@ function extraxtLinks(text){
     return results.length !== 0 ? results : "There is no links in the file!";
 }
 
-
-/* // função síncrona:
-function returnFile(filePath){
-    const encoding = 'utf-8';
-    fs.readFile(filePath, encoding, (error, text) => {
-        if(error){
-            treatError(error);
-        }
-        console.log(chalk.green(text));
-    });
+function treatError(error){
+    throw new Error(chalk.red(error.code, "This file doesn't exist or it's a directory!"));
 }
- */
 
-/* // função assíncrona com then()
-function returnFile(filePath){
-    const encoding = 'utf-8';
-    fs.promises.readFile(filePath, encoding)
-               .then((text) => console.log(chalk.green(text)))
-               .catch(treatError);
-} */
+export default returnLinksFromFileOrDirectoryInPath;
