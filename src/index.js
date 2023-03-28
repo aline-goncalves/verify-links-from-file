@@ -1,23 +1,20 @@
-import fs from 'fs'; //lib nativa do node - file system
+import fs from 'fs';
 import chalk from 'chalk';
 
 async function returnLinksFromPath(path){
-    var links;
-
     try{
         if(fs.lstatSync(path).isFile()){
-            links = await returnLinksFromFile(path);
+            return await returnLinksFromFile(path);        
+        }
         
-        }else if(fs.lstatSync(path).isDirectory()){
-            links = await returnLinksFromDirectory(path); 
+        if(fs.lstatSync(path).isDirectory()){
+            return await returnLinksFromDirectory(path); 
         }
 
     }catch(error){
         treatError(error);
         return;
     }
-
-    return links;
 }
 
 async function returnLinksFromDirectory(path){

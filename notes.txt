@@ -29,3 +29,6 @@ async function returnFile(path) {
         treatError(error);    
     }
 }*/
+
+
+import fs from 'fs'; //lib nativa do node - file system

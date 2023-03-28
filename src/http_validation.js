@@ -1,4 +1,4 @@
-async function validateList(linksList, isDirectory){
+async function returnValidUrlsList(linksList, isDirectory){
     const urlList = extactURLsToValidate(linksList, isDirectory);
     const status = await validateURLs(urlList);
 
@@ -31,4 +31,4 @@ function httpErrorTreatment(error){
     return 'something went wrong while testing link';
 }
 
-export default validateList;
+export default returnValidUrlsList;
