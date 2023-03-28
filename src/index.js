@@ -1,14 +1,22 @@
 import fs from 'fs'; //lib nativa do node - file system
+import chalk from 'chalk';
 
 async function returnLinksFromPath(path){
     const links = [];
 
-    if(fs.lstatSync(path).isFile()){
-        links.push(await returnLinksFromFile(path));
-    
-    }else if(fs.lstatSync(path).isDirectory()){
-        links.push(await returnLinksFromDirectory(path));        
+    try{
+        if(fs.lstatSync(path).isFile()){
+            links.push(await returnLinksFromFile(path));
+        
+        }else if(fs.lstatSync(path).isDirectory()){
+            links.push(await returnLinksFromDirectory(path));        
+        }
+
+    }catch(error){
+        treatError(error);
+        return;
     }
+
     return links;
 }
 
@@ -30,12 +38,12 @@ async function returnLinksFromFile(path) {
     
     }catch(error){
         treatError(error);    
+        return;
     }
 }
 
 function extraxtLinks(text){
-    const regex = /\[([^[\]]*?)\]\((https?:\/\/[^\s?#.].[^\s]*)\)/gm;
-    
+    const regex = /\[([^[\]]*?)\]\((https?:\/\/[^\s?#.].[^\s]*)\)/gm;    
     const catches = [...text.matchAll(regex)];
     const results = catches.map(catchLink => ({[catchLink[1]]: catchLink[2]}))
 
@@ -43,7 +51,11 @@ function extraxtLinks(text){
 }
 
 function treatError(error){
-    throw new Error(chalk.red(error.code, "This file doesn't exist or it's a directory!"));
+    if(error.code === 'ENOENT'){
+        console.log(chalk.red(error.code, "This file or directory doesn't exist!"));
+        return;
+    }
+    console.log(chalk.red(error.code, "Verify the informed path!"));
 }
 
 export default returnLinksFromPath;
