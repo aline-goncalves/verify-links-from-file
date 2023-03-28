@@ -1,32 +1,30 @@
-import fs from 'fs'; //lib nativa do node - file system
+import fs from 'fs';
 import chalk from 'chalk';
 
 async function returnLinksFromPath(path){
-    const links = [];
-
     try{
         if(fs.lstatSync(path).isFile()){
-            links.push(await returnLinksFromFile(path));
+            return await returnLinksFromFile(path);        
+        }
         
-        }else if(fs.lstatSync(path).isDirectory()){
-            links.push(await returnLinksFromDirectory(path));        
+        if(fs.lstatSync(path).isDirectory()){
+            return await returnLinksFromDirectory(path); 
         }
 
     }catch(error){
         treatError(error);
         return;
     }
-
-    return links;
 }
 
 async function returnLinksFromDirectory(path){
-    const links = [];
+    var links = [], list = [];
     const files = await fs.promises.readdir(path);
         
     for await(let file of files){
-        links.push(await returnLinksFromFile(`${path}/${file}`));
+        links = links.concat(await returnLinksFromFile(`${path}/${file}`));
     }
+
     return links;
 }
 
@@ -45,7 +43,7 @@ async function returnLinksFromFile(path) {
 function extraxtLinks(text){
     const regex = /\[([^[\]]*?)\]\((https?:\/\/[^\s?#.].[^\s]*)\)/gm;    
     const catches = [...text.matchAll(regex)];
-    const results = catches.map(catchLink => ({[catchLink[1]]: catchLink[2]}))
+    const results = catches.map(catchLink => ({[catchLink[1]]: catchLink[2]}));
 
     return results.length !== 0 ? results : "There is no links in the file!";
 }

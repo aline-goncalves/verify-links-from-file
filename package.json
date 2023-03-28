@@ -1,12 +1,16 @@
 {
     "name": "verify-links-from-file",
     "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
+    "description": "lib to validate URLs from a .md file",
+    "main": "cli.js",
     "type":"module",
     "scripts": {
       "test": "echo \"Error: no test specified\" && exit 1",
-      "cli": "node ./src/cli.js"
+      "cli:testfile": "node ./src/cli.js ./files/text.md",
+      "cli:testdirectory": "node ./src/cli.js ./files/",
+      "cli:testfile:validate": "node ./src/cli.js ./files/text.md --validate",
+      "cli:testdirectory:validate": "node ./src/cli.js ./files/ --validate",
+      "cli":"node ./src/cli.js "
     },
     "repository": {
       "type": "git",
